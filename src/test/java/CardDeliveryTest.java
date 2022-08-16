@@ -61,7 +61,7 @@ public class CardDeliveryTest {
         $("[data-test-id = agreement]").click();
         $(".button").click();
         $("[data-test-id = success-notification]")
-                .shouldHave(text("Ура!"), Duration.ofSeconds(15))
+                .shouldHave(text("Успешно!"), Duration.ofSeconds(15))
                 .shouldBe(visible);
         $("[data-test-id = success-notification] .notification__content")
                 .shouldHave(text("Встреча успешно запланирована на " + formatter.format(firstMeetingDate)), Duration.ofSeconds(15))
