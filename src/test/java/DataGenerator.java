@@ -9,6 +9,7 @@ import java.util.Locale;
 public class DataGenerator {
     private DataGenerator() {
     }
+
     public static class Registration {
         private Registration() {
         }
@@ -16,7 +17,8 @@ public class DataGenerator {
         public static FormData generate() {
             Faker faker = new Faker(new Locale("ru"));
             String City = generateCity();
-            return new FormData(faker.name().fullName(),City,faker.numerify("+79#########"));
+            //   можно еще так генерировать телефонный номер - faker.numerify("+79#########"))
+            return new FormData(faker.name().fullName(), City, faker.phoneNumber().phoneNumber());
         }
 
         public static LocalDate generateDate(long countDays) {
