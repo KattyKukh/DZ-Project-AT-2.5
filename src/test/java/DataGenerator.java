@@ -1,7 +1,4 @@
-import com.github.javafaker.CreditCardType;
 import com.github.javafaker.Faker;
-
-import javax.management.StringValueExp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -16,13 +13,13 @@ public class DataGenerator {
 
         public static FormData generate() {
             Faker faker = new Faker(new Locale("ru"));
-            String City = generateCity();
+            String city = generateCity();
             //   можно еще так генерировать телефонный номер - faker.numerify("+79#########"))
-            return new FormData(faker.name().fullName(), City, faker.phoneNumber().phoneNumber());
+            return new FormData(faker.name().fullName(), city, faker.phoneNumber().phoneNumber());
         }
 
-        public static LocalDate generateDate(long countDays) {
-            return LocalDate.now().plusDays(countDays);
+        public static String generateDate(long countDays, String pattern) {
+            return LocalDate.now().plusDays(countDays).format(DateTimeFormatter.ofPattern(pattern));
         }
 
         public static String generateCity() {

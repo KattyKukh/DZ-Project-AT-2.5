@@ -14,22 +14,6 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class CardDeliveryTest {
     private FormData generator = DataGenerator.Registration.generate();
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
-    public String numberDay(String date) {
-        String numberDay;
-        if (date.substring(0, 1).contains("0")) {
-            numberDay = date.substring(1, 2);
-        } else {
-            numberDay = date.substring(0, 2);
-        }
-        return numberDay;
-    }
-
-    @BeforeAll
-    static void setUpAll() {
-        Configuration.headless = true;
-    }
 
     @BeforeEach
     void setupTest() {
@@ -40,40 +24,35 @@ public class CardDeliveryTest {
     void shouldSuccessfulPlanAndReplanMeeting() {
         var validUser = generator.getValidName();
         var daysToAddForFirstMeeting = 4;
-        var firstMeetingDate = DataGenerator.Registration.generateDate(daysToAddForFirstMeeting);
+        var firstMeetingDate = DataGenerator.Registration.generateDate(daysToAddForFirstMeeting, "dd.MM.yyyy");
         var daysToAddForSecondMeeting = 7;
-        var secondMeetingDate = DataGenerator.Registration.generateDate(daysToAddForSecondMeeting);
+        var secondMeetingDate = DataGenerator.Registration.generateDate(daysToAddForSecondMeeting, "dd.MM.yyyy");
+        var firstMeetingDateDay = DataGenerator.Registration.generateDate(daysToAddForFirstMeeting, "dd");
+        var secondMeetingDateDay = DataGenerator.Registration.generateDate(daysToAddForSecondMeeting, "dd");
         var validCity = generator.getValidCity();
         var validPhone = generator.getValidPhone();
-        // TODO: добавить логику теста в рамках которого будет выполнено планирование и перепланирование встречи.
         $("[data-test-id=city] .input__control").setValue(validCity);
         $$(".menu-item").first().click();
         $(".input__icon").click();
-        String calendarDay = numberDay(formatter.format(firstMeetingDate));
         if (LocalDate.now().plusDays(daysToAddForFirstMeeting).getMonthValue() > LocalDate.now().getMonthValue()) {
             $("[data-step='1'].calendar__arrow_direction_right ").click();
-            $$(".calendar__day").find(text(calendarDay)).click();
-        } else {
-            $$(".calendar__day").find(text(calendarDay)).click();
         }
+        $$(".calendar__day").find(text(firstMeetingDateDay)).click();
         $("[data-test-id = name] .input__control").setValue(validUser);
         $("[data-test-id = phone] .input__control").setValue(validPhone);
         $("[data-test-id = agreement]").click();
         $(".button").click();
         $("[data-test-id = success-notification]")
-                .shouldHave(text("Успешно!"), Duration.ofSeconds(15))
+                .shouldHave(text("Успешно!"))
                 .shouldBe(visible);
         $("[data-test-id = success-notification] .notification__content")
-                .shouldHave(text("Встреча успешно запланирована на " + formatter.format(firstMeetingDate)), Duration.ofSeconds(15))
+                .shouldHave(text("Встреча успешно запланирована на " + firstMeetingDate), Duration.ofSeconds(15))
                 .shouldBe(visible);
         $(".input__icon").click();
-        calendarDay = numberDay(formatter.format(secondMeetingDate));
-        if (secondMeetingDate.getMonthValue() > LocalDate.now().getMonthValue()) {
+        if (LocalDate.now().plusDays(daysToAddForSecondMeeting).getMonthValue() > LocalDate.now().getMonthValue()) {
             $("[data-step='1'].calendar__arrow_direction_right ").click();
-            $$(".calendar__day").find(text(calendarDay)).click();
-        } else {
-            $$(".calendar__day").find(text(calendarDay)).click();
         }
+        $$(".calendar__day").find(text(secondMeetingDateDay)).click();
         $(".button").click();
         $("[data-test-id = replan-notification]")
                 .shouldHave(text("Необходимо подтверждение"), Duration.ofSeconds(15))
@@ -89,7 +68,7 @@ public class CardDeliveryTest {
                 .shouldHave(text("Успешно!"), Duration.ofSeconds(15))
                 .shouldBe(visible);
         $("[data-test-id = success-notification] .notification__content")
-                .shouldHave(text("Встреча успешно запланирована на " + formatter.format(secondMeetingDate)), Duration.ofSeconds(15))
+                .shouldHave(text("Встреча успешно запланирована на " + secondMeetingDate))
                 .shouldBe(visible);
     }
 }
