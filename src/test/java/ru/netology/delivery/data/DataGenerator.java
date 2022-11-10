@@ -1,5 +1,7 @@
 package ru.netology.delivery.data;
+
 import com.github.javafaker.Faker;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -17,6 +19,12 @@ public class DataGenerator {
             String city = generateCity();
             //   можно еще так генерировать телефонный номер - faker.numerify("+79#########"))
             return new FormData(faker.name().fullName(), city, faker.phoneNumber().phoneNumber());
+        }
+
+        public static String generateNameWithRusYo() {
+            Faker faker = new Faker(new Locale("ru"));
+            String eName = faker.name().fullName() + "ё";
+            return eName;
         }
 
         public static String generateDate(long countDays, String pattern) {
